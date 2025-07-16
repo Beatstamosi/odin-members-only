@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import style from "./SignUp.module.css";
 import { useNavigate } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,9 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(false);
   const [formFilled, setFormFilled] = useState(false);
+  const [userNameExists, setUserNameExists] = useState(false);
 
+  // Password needs to match warning
   useEffect(() => {
     if (password === confirmPassword && password && confirmPassword) {
       setPasswordMatch(true);
@@ -20,6 +23,7 @@ function SignUp() {
     }
   }, [password, confirmPassword]);
 
+  // Check if form is filled to enable submit button
   useEffect(() => {
     if (
       firstName &&
@@ -28,7 +32,8 @@ function SignUp() {
       emailIsValid &&
       password &&
       confirmPassword &&
-      passwordMatch
+      passwordMatch &&
+      !userNameExists
     ) {
       setFormFilled(true);
     } else {
@@ -42,6 +47,7 @@ function SignUp() {
     confirmPassword,
     passwordMatch,
     emailIsValid,
+    userNameExists,
   ]);
 
   const navigate = useNavigate();
@@ -54,12 +60,44 @@ function SignUp() {
     setConfirmPassword("");
   };
 
+  const checkForEmailExists = async (emailToCheck: string) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/user/check-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email: emailToCheck,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(data.exists);
+        setUserNameExists(data.exists);
+      } else {
+        console.error("Failed to check if email exists: ", data.error);
+      }
+    } catch (err) {
+      console.error(`Error checking if user exists: ${err} `);
+    }
+  };
+
+  const debounce = useDebouncedCallback(checkForEmailExists, 500);
+
   const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailInput = e.target;
     setEmail(emailInput.value);
 
     if (emailInput.validity.valid) {
       setEmailIsValid(true);
+      debounce(emailInput.value);
     } else {
       setEmailIsValid(false);
     }
@@ -135,6 +173,11 @@ function SignUp() {
         {email && !emailIsValid && (
           <p id="emailWrong" className={style.emailWrongWarning} role="alert">
             Please enter valid E-Mail.
+          </p>
+        )}
+        {email && userNameExists && (
+          <p id="emailExists" className={style.emailWrongWarning} role="alert">
+            User with this E-mail already exists.
           </p>
         )}
         <input

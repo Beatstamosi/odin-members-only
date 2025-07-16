@@ -69,6 +69,27 @@ authRouter.get("/me", (req, res) => {
   }
 });
 
+// CHECK IF USER / EMAIL ALREADY SIGNED UP
+authRouter.post("/check-email", async (req, res) => {
+  try {
+    const user = await pool.query("SELECT 1 FROM users WHERE email = ($1);", [
+      req.body.email,
+    ]);
+
+    const exists = user.rows.length > 0;
+
+    res.status(200).json({ exists });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: `Error signing up user: ${err.message}` });
+    } else {
+      res.status(500).json({
+        error: "Unknown error occurred during check for existing user.",
+      });
+    }
+  }
+});
+
 // LOGOUT
 authRouter.get("/log-out", (req, res, next) => {
   req.logout((err) => {
