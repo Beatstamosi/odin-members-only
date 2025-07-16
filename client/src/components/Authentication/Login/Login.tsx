@@ -4,12 +4,24 @@ import style from "./Login.module.css";
 import { useAuth } from "../useAuth.tsx";
 
 function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailIsValid, setEmailIsValid] = useState(false);
   const [password, setPassword] = useState("");
   const [loginFailed, setLoginFailed] = useState(false);
   const { fetchUser } = useAuth();
 
   const navigate = useNavigate();
+
+  const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const emailInput = e.target;
+    setEmail(emailInput.value);
+
+    if (emailInput.validity.valid) {
+      setEmailIsValid(true);
+    } else {
+      setEmailIsValid(false);
+    }
+  };
 
   const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +36,7 @@ function Login() {
           },
           credentials: "include",
           body: JSON.stringify({
-            username,
+            email,
             password,
           }),
         }
@@ -46,30 +58,36 @@ function Login() {
   return (
     <div className={style.pageWrapper}>
       <h1>Login</h1>
-      {loginFailed ? <p>Username or password is wrong</p> : null}
+      {loginFailed ? <p>Email or password is wrong</p> : null}
       <form onSubmit={onFormSubmit}>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="email">E-Mail</label>
+        {email && !emailIsValid && (
+          <p id="emailWrong" className={style.emailWrongWarning} role="alert">
+            Please enter valid E-Mail.
+          </p>
+        )}
         <input
-          id="username"
-          name="username"
-          placeholder="username"
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          id="email"
+          name="email"
+          placeholder="Enter E-Mail"
+          type="email"
+          value={email}
+          onChange={(e) => emailChange(e)}
         />
         <label htmlFor="password">Password</label>
         <input
           id="password"
           name="password"
           type="password"
+          placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
           type="submit"
-          disabled={!username || !password}
+          disabled={!emailIsValid || !password}
           className={
-            !username || !password ? style.btnDisabled : style.btnActive
+            !emailIsValid || !password ? style.btnDisabled : style.btnActive
           }
         >
           Log In

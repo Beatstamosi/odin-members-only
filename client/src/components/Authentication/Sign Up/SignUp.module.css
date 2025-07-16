@@ -1,9 +1,7 @@
-/* Reset box model */
 * {
   box-sizing: border-box;
 }
 
-/* Main wrapper centers content */
 .pageWrapper {
   display: flex;
   justify-content: center;
@@ -14,7 +12,6 @@
   width: 100vw;
 }
 
-/* Form container with max width */
 .formContainer {
   width: 100%;
   max-width: 700px;
@@ -24,7 +21,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Headings */
 h1 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
@@ -32,7 +28,6 @@ h1 {
   color: #333;
 }
 
-/* Labels and Inputs */
 label {
   display: block;
   margin-bottom: 0.5rem;
@@ -53,12 +48,16 @@ input:focus {
   outline: none;
 }
 
-/* Warning */
-.passwordMatchWarning {
+.passwordMatchWarning,
+.emailWrongWarning {
   color: #d32f2f;
   font-size: 0.95rem;
   font-weight: 500;
   margin-bottom: 1rem;
+}
+
+.emailWrongWarning {
+  justify-self: flex-start;
 }
 
 /* Buttons */

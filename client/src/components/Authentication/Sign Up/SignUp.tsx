@@ -3,10 +3,14 @@ import style from "./SignUp.module.css";
 import { useNavigate } from "react-router-dom";
 
 function SignUp() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailIsValid, setEmailIsValid] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [formFilled, setFormFilled] = useState(false);
 
   useEffect(() => {
     if (password === confirmPassword && password && confirmPassword) {
@@ -16,12 +20,49 @@ function SignUp() {
     }
   }, [password, confirmPassword]);
 
+  useEffect(() => {
+    if (
+      firstName &&
+      lastName &&
+      email &&
+      emailIsValid &&
+      password &&
+      confirmPassword &&
+      passwordMatch
+    ) {
+      setFormFilled(true);
+    } else {
+      setFormFilled(false);
+    }
+  }, [
+    email,
+    firstName,
+    lastName,
+    password,
+    confirmPassword,
+    passwordMatch,
+    emailIsValid,
+  ]);
+
   const navigate = useNavigate();
 
   const resetForm = () => {
-    setUsername("");
+    setEmail("");
+    setFirstName("");
+    setLastName("");
     setPassword("");
     setConfirmPassword("");
+  };
+
+  const emailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const emailInput = e.target;
+    setEmail(emailInput.value);
+
+    if (emailInput.validity.valid) {
+      setEmailIsValid(true);
+    } else {
+      setEmailIsValid(false);
+    }
   };
 
   const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,8 +78,10 @@ function SignUp() {
           },
           credentials: "include",
           body: JSON.stringify({
-            username,
+            email,
             password,
+            firstName,
+            lastName,
           }),
         }
       );
@@ -64,15 +107,44 @@ function SignUp() {
       >
         <h1>Sign Up</h1>
 
-        <label htmlFor="username">Username</label>
+        <label htmlFor="firstName">First Name</label>
         <input
-          id="username"
-          name="username"
+          id="firstName"
+          name="firstName"
           type="text"
-          placeholder="Enter your username"
-          aria-label="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter your First Name"
+          aria-label="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+
+        <label htmlFor="lastName">Last Name</label>
+        <input
+          id="lastName"
+          name="lastName"
+          type="text"
+          placeholder="Enter your Last Name"
+          aria-label="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+
+        <label htmlFor="email">Email</label>
+        {email && !emailIsValid && (
+          <p id="emailWrong" className={style.emailWrongWarning} role="alert">
+            Please enter valid E-Mail.
+          </p>
+        )}
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Enter your Email"
+          aria-label="Email"
+          value={email}
+          onChange={(e) => emailChange(e)}
           required
         />
 
@@ -101,7 +173,7 @@ function SignUp() {
           required
         />
 
-        {!passwordMatch && (
+        {password && confirmPassword && !passwordMatch && (
           <p
             id="passwordHelp"
             className={style.passwordMatchWarning}
@@ -113,9 +185,9 @@ function SignUp() {
 
         <button
           type="submit"
-          disabled={!passwordMatch}
-          className={!passwordMatch ? style.btnDisabled : style.btnActive}
-          aria-disabled={!passwordMatch}
+          disabled={!formFilled}
+          className={!formFilled ? style.btnDisabled : style.btnActive}
+          aria-disabled={!formFilled}
           aria-label="Submit sign up form"
         >
           Sign Up

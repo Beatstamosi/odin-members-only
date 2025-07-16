@@ -50,6 +50,14 @@ button {
   margin-top: 0.5rem;
 }
 
+.emailWrongWarning {
+  color: #d32f2f;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  justify-self: flex-start;
+}
+
 .btnActive {
   background-color: #007bff;
   color: white;
