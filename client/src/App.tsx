@@ -10,7 +10,8 @@ function App() {
     <>
       <h1>{user?.email || "No user found"}</h1>
       <p>
-        {user?.firstName} {user?.lastName}, {user?.admin}, {user?.member}
+        {user?.firstName} {user?.lastName}, {`${user?.admin}`},{" "}
+        {`${user?.member}`}
       </p>
       <LogOut />
     </>
