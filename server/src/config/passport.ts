@@ -2,19 +2,18 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import pool from "../db/pool.js";
 import bcrypt from "bcryptjs";
-import type { User } from "../types/User.js";
 
 passport.use(
-  new LocalStrategy(async (username, password, done) => {
+  new LocalStrategy(async (email, password, done) => {
     try {
       const { rows } = await pool.query(
-        "SELECT * FROM users WHERE username = $1",
-        [username]
+        "SELECT * FROM users WHERE email = $1",
+        [email]
       );
       const user = rows[0];
 
       if (!user) {
-        return done(null, false, { message: "Incorrect username" });
+        return done(null, false, { message: "Incorrect Email" });
       }
       const match = await bcrypt.compare(password, user.password);
       if (!match) {

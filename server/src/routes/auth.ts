@@ -10,8 +10,10 @@ const authRouter = Router();
 authRouter.post("/sign-up", async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
-      req.body.username,
+    await pool.query("INSERT INTO users (firstName, lastName, email, password ) VALUES ($1, $2, $3, $4)", [
+      req.body.firstName,
+      req.body.lastName,
+      req.body.email,
       hashedPassword,
     ]);
     res.status(200).json({ message: "User signed up successfully." });
@@ -53,8 +55,8 @@ authRouter.post("/login", (req, res, next) => {
 authRouter.get("/me", (req, res) => {
   if (req.isAuthenticated()) {
     // Send limited user data (avoid sending password, etc.)
-    const { id, username } = req.user;
-    res.json({ user: { id, username } });
+    const { id, email, firstName, lastName, member, admin } = req.user;
+    res.json({ user: { id, email, firstName, lastName, member, admin } });
   } else {
     res.status(401).json({ user: null });
   }
