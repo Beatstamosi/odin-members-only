@@ -5,10 +5,14 @@ import { useEffect, useState } from "react";
 import type { Message } from "./components/Authentication/types/Messages.js";
 import style from "./App.module.css";
 import DisplayMessage from "./components/DisplayMessage/displayMessage.js";
+import useBecomeMember from "./components/becomeMember.js";
+import useBecomeAdmin from "./components/becomeAdmin.js";
 
 function App() {
   const { user, loading, isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<Message[]>();
+  const becomeMember = useBecomeMember();
+  const becomeAdmin = useBecomeAdmin();
 
   // useEffect to fetch messages
   useEffect(() => {
@@ -44,7 +48,10 @@ function App() {
     <>
       <div className={style.navBarWrapper}>
         <div>
-          <h2>{user?.email || "No user found"}</h2>
+          <h2>
+            {user?.email || "No user found"} {user?.member && <span>⭐</span>}{" "}
+            {user?.admin && <span>🚀</span>}
+          </h2>
         </div>
         <div className={style.navBarRightPart}>
           {!isAuthenticated && <Link to="/login">Log In</Link>}
@@ -54,10 +61,22 @@ function App() {
               <button className={style.btnClassic}>Create Message</button>
 
               {!user?.member && (
-                <button className={style.btnClassic}>Become a Member</button>
+                <button
+                  className={style.btnClassic}
+                  onClick={(e) => becomeMember(e)}
+                >
+                  Become a Member
+                </button>
               )}
 
-              {user?.member && !user?.admin && <button>Become Admin</button>}
+              {user?.member && !user?.admin && (
+                <button
+                  className={style.btnClassic}
+                  onClick={(e) => becomeAdmin(e)}
+                >
+                  Become Admin
+                </button>
+              )}
 
               <LogOut />
             </>
@@ -67,7 +86,7 @@ function App() {
 
       <div>
         {messages?.map((msg) => (
-          <DisplayMessage message={msg} user={user} />
+          <DisplayMessage key={msg.id} message={msg} user={user} />
         ))}
       </div>
     </>

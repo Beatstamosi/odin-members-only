@@ -8,6 +8,8 @@ import passport from "passport";
 import authRouter from "./routes/auth.js";
 import "./config/passport.js";
 import messagesRouter from "./routes/messages.js";
+import memberRouter from "./routes/membership.js";
+import adminRouter from "./routes/admin.js";
 
 // Give access to environment variables
 dotenv.config();
@@ -55,7 +57,7 @@ if (process.env.NODE_ENV === "development") {
     cors({
       origin: "http://localhost:5173",
       credentials: true,
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     })
   );
 }
@@ -63,6 +65,8 @@ if (process.env.NODE_ENV === "development") {
 // Routes
 app.use("/user", authRouter);
 app.use("/messages", messagesRouter);
+app.use("/membership", memberRouter);
+app.use("/admin", adminRouter);
 
 // Serve static files in production
 if (process.env.NODE_ENV === "production") {
