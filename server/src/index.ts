@@ -7,6 +7,7 @@ import session from "express-session";
 import passport from "passport";
 import authRouter from "./routes/auth.js";
 import "./config/passport.js";
+import messagesRouter from "./routes/messages.js";
 
 // Give access to environment variables
 dotenv.config();
@@ -59,11 +60,9 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
-// Authentication Route
+// Routes
 app.use("/user", authRouter);
-
-// API route example
-app.get("/", (req, res) => res.render("index", { user: req.user }));
+app.use("/messages", messagesRouter);
 
 // Serve static files in production
 if (process.env.NODE_ENV === "production") {

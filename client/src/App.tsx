@@ -14,7 +14,7 @@ function App() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.BASE_URL}/user/get-messages`
+          `${import.meta.env.VITE_API_BASE_URL}/messages/get-all`
         );
 
         const data = await res.json();
