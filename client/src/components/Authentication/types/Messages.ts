@@ -1,4 +1,4 @@
-export type Messages = {
+export type Message = {
   id: number;
   title: string;
   description: string;

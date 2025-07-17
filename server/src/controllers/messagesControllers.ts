@@ -3,7 +3,11 @@ import { Request, Response } from "express";
 
 async function getAllMessages(req: Request, res: Response) {
   try {
-    const { rows } = await pool.query("SELECT * FROM messages");
+    const { rows } = await pool.query(
+      `SELECT messages.*, users.firstname AS author
+   FROM messages
+   JOIN users ON messages.userid = users.id`
+    );
 
     res.status(200).json({ messages: rows });
   } catch (err) {

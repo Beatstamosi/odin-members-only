@@ -2,12 +2,13 @@ import { Link } from "react-router-dom";
 import { useAuth } from "./components//Authentication/useAuth.jsx";
 import LogOut from "./components/Authentication/LogOut/LogOut.jsx";
 import { useEffect, useState } from "react";
-import type { Messages } from "./components/Authentication/types/Messages.js";
+import type { Message } from "./components/Authentication/types/Messages.js";
 import style from "./App.module.css";
+import DisplayMessage from "./components/DisplayMessage/displayMessage.js";
 
 function App() {
   const { user, loading, isAuthenticated } = useAuth();
-  const [messages, setMessages] = useState<Messages[]>();
+  const [messages, setMessages] = useState<Message[]>();
 
   // useEffect to fetch messages
   useEffect(() => {
@@ -66,7 +67,7 @@ function App() {
 
       <div>
         {messages?.map((msg) => (
-          <p key={msg.id}>{msg.title}</p>
+          <DisplayMessage message={msg} user={user} />
         ))}
       </div>
     </>
