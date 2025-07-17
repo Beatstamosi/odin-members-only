@@ -8,11 +8,7 @@ import RequireAuth from "./Authentication/RequireAuth.jsx";
 const routes = [
   {
     path: "/",
-    element: (
-      <RequireAuth>
-        <App />
-      </RequireAuth>
-    ),
+    element: <App />,
     errorElement: <ErrorPage />,
   },
   {

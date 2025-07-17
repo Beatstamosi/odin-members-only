@@ -79,7 +79,6 @@ function SignUp() {
       const data = await res.json();
 
       if (res.ok) {
-        console.log(data.exists);
         setUserNameExists(data.exists);
       } else {
         console.error("Failed to check if email exists: ", data.error);

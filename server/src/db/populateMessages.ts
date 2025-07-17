@@ -29,7 +29,7 @@ const messages = [
   },
 ];
 
-async function seedMessages() {
+async function main() {
   try {
     for (const msg of messages) {
       await pool.query(
@@ -45,4 +45,4 @@ async function seedMessages() {
   }
 }
 
-seedMessages();
+main();
