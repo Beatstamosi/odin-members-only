@@ -7,7 +7,9 @@ function PostMessage() {
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
-  const onSubmitHandler = async () => {
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/messages/post-message`,
@@ -17,6 +19,10 @@ function PostMessage() {
             "Content-Type": "application/json",
           },
           credentials: "include",
+          body: JSON.stringify({
+            title,
+            description,
+          }),
         }
       );
 
@@ -34,7 +40,7 @@ function PostMessage() {
   };
 
   return (
-    <form onSubmit={onSubmitHandler} className={styles.formContainer}>
+    <form onSubmit={(e) => onSubmitHandler(e)} className={styles.formContainer}>
       <label htmlFor="title">Title</label>
       <input
         type="text"
