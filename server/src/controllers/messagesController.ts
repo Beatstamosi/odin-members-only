@@ -43,4 +43,31 @@ async function postMessage(req: Request, res: Response) {
   }
 }
 
-export { getAllMessages, postMessage };
+async function deleteMessage(req: Request, res: Response) {
+  if (!req.body.messageId || !req.user?.admin) {
+    return res.status(400).json({ error: "Missing required information" });
+  }
+
+  try {
+    const result = await pool.query(
+      "DELETE FROM messages WHERE id = $1 RETURNING*",
+      [req.body.messageId]
+    );
+
+    if (result.rowCount === 1) {
+      res.status(201).json({ message: "Message deleted successfully!" });
+    } else {
+      res.status(500).json({ error: "Message could not be deleted" });
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      res
+        .status(500)
+        .json({ error: `Message could not be deleted: ${err.message}` });
+    } else {
+      res.status(500).json({ error: "Message could not be deleted:", err });
+    }
+  }
+}
+
+export { getAllMessages, postMessage, deleteMessage };

@@ -1,6 +1,7 @@
 import type { Message } from "../Authentication/types/Messages";
 import type { User } from "../Authentication/types/User";
 import styles from "./DisplayMessage.module.css";
+import useDeleteMessage from "../deleteMessageHandler";
 
 type Props = {
   message: Message;
@@ -8,6 +9,8 @@ type Props = {
 };
 
 function DisplayMessage({ message, user }: Props) {
+  const deleteMessageHandler = useDeleteMessage();
+
   return (
     <div className={styles.card}>
       <h2 className={styles.title}>{message.title}</h2>
@@ -18,7 +21,12 @@ function DisplayMessage({ message, user }: Props) {
         </p>
       )}
       {user?.admin && (
-        <button className={styles.deleteButton}>Delete Message</button>
+        <button
+          className={styles.deleteButton}
+          onClick={(e) => deleteMessageHandler(e, message.id)}
+        >
+          Delete Message
+        </button>
       )}
     </div>
   );
