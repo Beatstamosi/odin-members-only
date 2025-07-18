@@ -1,21 +1,5 @@
-# TS Template for Express + React App
+# Members Only
 
-Branch passport has User Authentication via passportjs set up.
+My Take on https://www.theodinproject.com/lessons/node-path-nodejs-members-only.
 
-1. Clone Repo
-2. npm install
-3. Add Database via pool.js
-4. Set up environment variables
-
-.env client:
-VITE_API_BASE_URL
-
-.env server:
-SESSION_SECRET=
-PGHOST=
-PGUSER=
-PGDATABASE=
-PGPASSWORD=
-PGPORT=5432 ?
-
-NODE_ENV=development
+Building a small web-app focused on authentication, showing content based on user status and giving users different rights like admin.
